@@ -6,18 +6,21 @@ import org.springframework.batch.item.ItemStreamReader;
 import org.springframework.batch.item.NonTransientResourceException;
 import org.springframework.batch.item.ParseException;
 import org.springframework.batch.item.UnexpectedInputException;
+import org.springframework.batch.item.file.FlatFileItemReader;
+import org.springframework.batch.item.file.ResourceAwareItemReaderItemStream;
+import org.springframework.core.io.Resource;
 
 import com.springbatch.arquivomultiplosformatos.dominio.Cliente;
 import com.springbatch.arquivomultiplosformatos.dominio.Transacao;
 
-public class ArquivoClienteTransacaoReader implements ItemStreamReader<Cliente> {
+public class ArquivoClienteTransacaoReader implements ItemStreamReader<Cliente>, ResourceAwareItemReaderItemStream<Cliente> {
 
 	// transação ou cliente
 	private Object objetoAtual;
 	
-	private ItemStreamReader<Object> delegate;
+	private FlatFileItemReader<Object> delegate;
 	
-	public ArquivoClienteTransacaoReader(ItemStreamReader<Object> delegate) {
+	public ArquivoClienteTransacaoReader(FlatFileItemReader<Object> delegate) {
 		this.delegate = delegate;
 	}
 
@@ -62,4 +65,8 @@ public class ArquivoClienteTransacaoReader implements ItemStreamReader<Cliente> 
 		return objetoAtual;
 	}
 
+	@Override
+	public void setResource(Resource resource) {
+		delegate.setResource(resource);
+	}
 }
